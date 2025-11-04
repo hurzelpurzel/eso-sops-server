@@ -1,10 +1,9 @@
 # Binaries
-/out
+/bin
 
 # Vendor and modules
 vendor/
-*.mod
-*.sum
+
 
 # Editor
 .vscode/
@@ -12,6 +11,8 @@ vendor/
 
 # Git
 .git
+.github
+.gitignore
 
 # OS
 .DS_Store
@@ -21,3 +22,8 @@ vendor/
 
 # Ignore local env files
 .env
+
+README:md
+LICENCE
+Makefile
+Dockerfile

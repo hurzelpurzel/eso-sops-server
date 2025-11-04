@@ -1,34 +1,32 @@
 package main
 
 import (
-	"context"
-	"log"
-	"net/http"
-	"os"
-	"os/signal"
 
-	"github.com/hurzelpurzel/eso-sops-server/internal/handlers"
-	"github.com/hurzelpurzel/eso-sops-server/internal/server"
+    "github.com/gin-gonic/gin"
+    "github.com/hurzelpurzel/eso-sops-server/internal/backend"
+    "github.com/hurzelpurzel/eso-sops-server/internal/config"
+    "github.com/hurzelpurzel/eso-sops-server/internal/decrypt"
+
 )
 
+
+
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	addr := ":" + port
+    config, _ := config.LoadConfig("/configs/config.yaml")
+    if err := backend.CloneRepo(config); err != nil {
+        panic(err)
+    }
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/healthz", handlers.HealthHandler)
+    r := gin.Default()
 
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
-	defer stop()
+    r.GET("/keys", func(c *gin.Context) {
+        data, err := decrypt.GetDecryptedYAMLs(config)
+        if err != nil {
+            c.JSON(500, gin.H{"error": err.Error()})
+            return
+        }
+        c.JSON(200, data)
+    })
 
-	srv := server.NewServer(addr, mux)
-
-	log.Printf("starting server on %s", addr)
-	if err := srv.ListenAndServe(ctx); err != nil && err != http.ErrServerClosed {
-		log.Fatalf("server error: %v", err)
-	}
-	log.Println("server stopped")
+    r.Run(":8080")
 }
