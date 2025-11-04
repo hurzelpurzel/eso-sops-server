@@ -1,0 +1,23 @@
+# Binaries
+/out
+
+# Vendor and modules
+vendor/
+*.mod
+*.sum
+
+# Editor
+.vscode/
+.idea/
+
+# Git
+.git
+
+# OS
+.DS_Store
+
+# Test and build artifacts
+*.test
+
+# Ignore local env files
+.env
