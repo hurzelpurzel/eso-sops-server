@@ -3,7 +3,7 @@
 
 # Vendor and modules
 vendor/
-
+doc/
 
 # Editor
 .vscode/
