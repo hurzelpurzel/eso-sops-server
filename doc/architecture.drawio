@@ -1,0 +1,62 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.8 Chrome/140.0.7339.240 Electron/38.4.0 Safari/537.36" version="28.2.8">
+  <diagram name="Seite-1" id="76ulDHlkpgA-5f-cRjTl">
+    <mxGraphModel dx="1426" dy="814" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-1" value="Git&lt;div&gt;+Sops&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="970" y="324" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-2" value="" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.mscae.enterprise.key_permissions" vertex="1" parent="1">
+          <mxGeometry x="980" y="235" width="26" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-3" value="Maintainer" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="225" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="-56qFb9lHVC-PSmcAQ_n-5" target="-56qFb9lHVC-PSmcAQ_n-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-14" value="clone" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="-56qFb9lHVC-PSmcAQ_n-13">
+          <mxGeometry x="0.2203" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="-56qFb9lHVC-PSmcAQ_n-5" target="-56qFb9lHVC-PSmcAQ_n-19">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="703" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-5" value="eso-sops-server" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="643" y="334" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-6" value="Decrypt on Access" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.mscae.enterprise.key_permissions" vertex="1" parent="1">
+          <mxGeometry x="690" y="240" width="26" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-7" value="K8s" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="274" width="200" height="326" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-8" value="Secret" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="-56qFb9lHVC-PSmcAQ_n-7">
+          <mxGeometry x="80" y="186" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="-56qFb9lHVC-PSmcAQ_n-7" source="-56qFb9lHVC-PSmcAQ_n-9" target="-56qFb9lHVC-PSmcAQ_n-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-9" value="External&lt;div&gt;Secret&lt;/div&gt;&lt;div&gt;Operator&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="-56qFb9lHVC-PSmcAQ_n-7">
+          <mxGeometry x="60" y="60" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="-56qFb9lHVC-PSmcAQ_n-9" target="-56qFb9lHVC-PSmcAQ_n-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-11" value="" style="dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.webicons.json;gradientColor=#DFDEDE" vertex="1" parent="1">
+          <mxGeometry x="877.6" y="240" width="72.4" height="66.2" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-12" value="" style="dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.webicons.json;gradientColor=#DFDEDE" vertex="1" parent="1">
+          <mxGeometry x="480" y="290" width="72.4" height="66.2" as="geometry" />
+        </mxCell>
+        <mxCell id="-56qFb9lHVC-PSmcAQ_n-19" value="Config&lt;div&gt;Credentials&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="663" y="460" width="80" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
