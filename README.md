@@ -1,5 +1,11 @@
 # eso-sops-server
-eso-sops-server is a backend for External Secret Operator and expose Mozilla Sops encrpted secrtes
+eso-sops-server is a backend for External Secret Operator and expose Mozilla Sops encrpted secrets
+
+
+## Usages
+
+see docs folder for details
+
 
 ## Getting started
 

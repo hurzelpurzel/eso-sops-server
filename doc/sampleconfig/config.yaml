@@ -1,0 +1,6 @@
+repos:
+   - name: sopstest
+     url: https://github.com/hurzelpurzel/sopstest.git
+     branch: "main"
+checkout_dir: /workdir
+
