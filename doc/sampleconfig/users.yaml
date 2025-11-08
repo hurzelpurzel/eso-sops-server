@@ -1,0 +1,12 @@
+users:
+  - name: admin
+    password: admin
+    age_key: "tbd"
+    roles:
+     - admin
+     - user
+  - name: other
+    password: nop
+    age_key: invalid
+    roles:
+     - invalid

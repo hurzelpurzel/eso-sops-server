@@ -2,23 +2,24 @@ package config
 
 import (
 	"os"
-
+   
 	"gopkg.in/yaml.v2"
 )
 
-type Config struct {
-	RepoURL    string `yaml:"repo_url"`
-	RepoBranch string `yaml:"repo_branch"`
-	RepoDir    string `yaml:"repo_dir"`
+
+
+
+
+
+func GetConfigPath() string {
+    if value, exists := os.LookupEnv("CONFIG_PATH"); exists {
+        return value
+    }
+    return "/home/ludger/testdir/config"
 }
 
-type Secret struct {
-	GitUser  string `yaml:"git_user"`
-	GitToken string `yaml:"git_token"`
-	AgeKey   string `yaml:"age_key"`
-}
-
-func LoadConfig(path string) (*Config, error) {
+func LoadConfig(file string) (* Config, error) {
+    path := GetConfigPath() + "/" + file
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -28,7 +29,8 @@ func LoadConfig(path string) (*Config, error) {
 	return &cfg, err
 }
 
-func LoadSecret(path string) (*Secret, error) {
+func LoadSecret(file string) (*Secret, error) {
+    path := GetConfigPath() + "/" + file
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -37,3 +39,15 @@ func LoadSecret(path string) (*Secret, error) {
 	err = yaml.Unmarshal(data, &sec)
 	return &sec, err
 }
+
+func LoadUsers(file string) (*Users, error) {
+    path := GetConfigPath() + "/" + file
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var users Users
+	err = yaml.Unmarshal(data, &users)
+	return &users, err
+}
+
