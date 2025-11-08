@@ -1,0 +1,4 @@
+version: "0.1.0"
+author: "Ludger Pottmeier ( hurzelpurzel )"
+release_date: "2025-11-08"
+notes: "Intial functional version. Tested without ESO Integration"
