@@ -4,6 +4,7 @@
 # Vendor and modules
 vendor/
 doc/
+helm/
 
 # Editor
 .vscode/
