@@ -7,23 +7,35 @@ import (
 	"github.com/hurzelpurzel/eso-sops-server/internal/decrypt"
 )
 
-func initRepo(config *config.Config, sec *config.Secret) {
+func initRepo(config *config.Config, sec *config.Secret) error{
 	for _, rep := range config.Repos {
 		if err := backend.CloneRepo(config, sec, &rep); err != nil {
-			panic(err)
+			return err
 		}
 
+	}
+	return nil
+}
+
+func checkErr(err error) {
+	if err != nil {
+		panic(err)
 	}
 }
 
 func main() {
-	cfg, _ := config.LoadConfig("config.yaml")
-	secret, _ := config.LoadSecret("git.yaml")
-	users, _ := config.LoadUsers("users.yaml")
+	cfg,err := config.LoadConfig("config.yaml")
+	checkErr(err)
+	secret, err := config.LoadSecret("git.yaml")
+	checkErr(err)
+	users,er := config.LoadUsers("users.yaml")
+	checkErr(er)
 
-	initRepo(cfg, secret)
+	err = initRepo(cfg, secret)
+	checkErr(err)
 
-	r := gin.Default()
+	// Set up Gin router
+	r:= gin.Default()
 
 	// Define authorized users
 	authorized := r.Group("/", gin.BasicAuth(*users.ToAccounts()))
@@ -35,7 +47,11 @@ func main() {
 			c.JSON(403, gin.H{"error": "forbidden"})
 			return
 		}
-		initRepo(cfg, secret)
+		err = initRepo(cfg, secret)
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
 		c.JSON(200, gin.H{"status": "repository initialized"})
 	})
 
