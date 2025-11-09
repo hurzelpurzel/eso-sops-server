@@ -1,0 +1,1 @@
+see https://external-secrets.io/latest/provider/webhook/

@@ -3,7 +3,7 @@ package decrypt
 import (
     "bytes"
     "fmt"
-    "io/fs"
+    
     "os"
     "os/exec"
     
@@ -30,6 +30,25 @@ func decryptSOPS(filePath string, agekey string) (string, error) {
     return out.String(), nil
 }
 
+func GetDecryptedJson(config *config.Config, user *config.User, filename string) ( * string, error) {
+   
+    fullPath := filepath.Join(config.CheckoutDir, filename)
+
+    if !strings.HasSuffix(fullPath, ".json") {
+        return nil, fmt.Errorf("file %s is not a JSON file", fullPath)
+    }
+
+    content, err := decryptSOPS(fullPath, user.AgeKey)
+    if err != nil {
+        return nil, fmt.Errorf("error decrypting %s: %w", fullPath, err)
+    }
+
+    
+    return &content, nil
+}
+
+
+/*
 func GetDecryptedJson(config *config.Config , user *config.User, filename string) (map[string]string, error) {
     result := make(map[string]string)
     err := filepath.WalkDir(filepath.Join(config.CheckoutDir, filename), func(path string, d fs.DirEntry, err error) error {
@@ -46,5 +65,4 @@ func GetDecryptedJson(config *config.Config , user *config.User, filename string
         return nil
     })
     return result, err
-}
-
+}*/
