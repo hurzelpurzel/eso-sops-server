@@ -112,7 +112,7 @@ volumeMounts:
     mountPath: /config/config.yaml
     subPath: config.yaml
   - name: git
-    mountPath: /config/git
+    mountPath: /config/git.yaml
     subPath: git.yaml
 
 nodeSelector: {}
