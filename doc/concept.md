@@ -72,9 +72,10 @@ http://hostname:8080/git/reponame/filename.json
 ## Features
 * Map a User it a age private key
 * Support more then one Repository
+* Let ESO Authenticate via User ( Integration Test )
 
 ## TODOS / Roadmap
 
 * Enable TLS
-* Let ESO Authenticate via User ( Integration Test )
-* Support other Storage Backend ( s3 , provided PVC ) 
+* Support other Storage Backend ( s3 , provided PVC )
+* Create Init Webhooks for each repo Cloud Events ( to handle change events of Sources)
