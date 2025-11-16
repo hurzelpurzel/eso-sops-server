@@ -14,19 +14,26 @@ import (
     "github.com/hurzelpurzel/eso-sops-server/internal/config"
 )
 
+
+
 /* Expects sops binary in container*/
 func decryptSOPS(filePath string, agekey string) (string, error) {
-    os.Setenv("SOPS_AGE_KEY", agekey)
+    err := os.Setenv("SOPS_AGE_KEY", agekey)
+    if err != nil {
+        return "", err
+    }
+
     cmd := exec.Command( "sops", "-d", filePath)
     
     var out bytes.Buffer
     cmd.Stdout = &out
     cmd.Stderr = os.Stderr
-    err := cmd.Run()
+    err = cmd.Run()
     if err != nil {
         return "", err
     }
-    os.Setenv("SOPS_AGE_KEY", "" )
+    _ = os.Setenv("SOPS_AGE_KEY", "" )
+
     return out.String(), nil
 }
 

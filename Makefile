@@ -11,6 +11,9 @@ run:
 	# Run locally (port can be set with PORT env)
 	PORT=8080 $(BINARY)
 
+lint:
+	golangci-lint run
+
 test:
 	go test ./... -v
 

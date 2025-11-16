@@ -61,21 +61,29 @@ users:
 
 
 
-Public accesible health endpoint: http://hostname:8080/healtz
+Public accessible health endpoint: http://hostname:8080/healtz
 
 Admin only init/clone of all repos : http://hostname:8080/init
 
 User endpoint to get an decrypted json file. Reponame must match configured one. 
 http://hostname:8080/git/reponame/filename.json
 
+or s3 
+http://hostname:8080/s3/bucketname/filename.json
+
+or plainfile in pvc
+http://hostname:8080/other/foldername/filename.json
+
 
 ## Features
-* Map a User it a age private key
+* Map a User to a age private key ( )
 * Support more then one Repository
 * Let ESO Authenticate via User ( Integration Test )
+* S3 Backend
+* Support other Storage Backend (  provided PVC )
 
 ## TODOS / Roadmap
-
+* Test new Backend Features
 * Enable TLS
-* Support other Storage Backend ( s3 , provided PVC )
+
 * Create Init Webhooks for each repo Cloud Events ( to handle change events of Sources)

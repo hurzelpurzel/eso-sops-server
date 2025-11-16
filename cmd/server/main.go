@@ -5,35 +5,36 @@ import (
 	"github.com/hurzelpurzel/eso-sops-server/internal/backend"
 	"github.com/hurzelpurzel/eso-sops-server/internal/config"
 	"github.com/hurzelpurzel/eso-sops-server/internal/decrypt"
+	"github.com/hurzelpurzel/eso-sops-server/internal/utils"
 )
 
-func initRepo(config *config.Config, sec *config.Secret) error{
-	for _, rep := range config.Repos {
-		if err := backend.CloneRepo(config, sec, &rep); err != nil {
-			return err
-		}
 
-	}
-	return nil
-}
 
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
+
 
 func main() {
-	cfg,err := config.LoadConfig("config.yaml")
-	checkErr(err)
-	secret, err := config.LoadSecret("git.yaml")
-	checkErr(err)
-	users,er := config.LoadUsers("users.yaml")
-	checkErr(er)
+	cfg,err := config.LoadConfig()
+	utils.CheckErr(err)
+	
+	users,er := config.LoadUsers()
+	utils.CheckErr(er)
 
-	err = initRepo(cfg, secret)
-	checkErr(err)
+	gitback, err := backend.CreateGit(cfg)
+	utils.CheckErr(err)
+	err = gitback.DownloadAll()
+	utils.CheckErr(err)
 
+	s3back, err := backend.CreateS3(cfg)
+	utils.CheckErr(err)
+	err = s3back.DownloadAll()
+	utils.CheckErr(err)
+
+	otherback, err := backend.CreateOthers(cfg)
+	utils.CheckErr(err)
+	err = otherback.DownloadAll()
+	utils.CheckErr(err)
+
+	
 	// Set up Gin router
 	r:= gin.Default()
 
@@ -47,12 +48,17 @@ func main() {
 			c.JSON(403, gin.H{"error": "forbidden"})
 			return
 		}
-		err = initRepo(cfg, secret)
+		err := s3back.DownloadAll()
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(200, gin.H{"status": "repository initialized"})
+		err = gitback.DownloadAll()	
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, gin.H{"status": "repositories initialized"})
 	})
 
 	authorized.GET("/git/:repo/:filepath", func(c *gin.Context) {
@@ -68,9 +74,36 @@ func main() {
 		c.JSON(200, data)
 	})
 
+	authorized.GET("/s3/:bucket/:filepath", func(c *gin.Context) {
+		username := c.MustGet(gin.AuthUserKey).(string)
+		bucket := c.Param("bucket")
+		filepath := c.Param("filepath")
+		filename := bucket + "/" + filepath
+		data, err := decrypt.GetDecryptedJson(cfg, users.GetUserByName(username), filename)
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, data)
+	})
+
+	authorized.GET("/other/:folder/:filepath", func(c *gin.Context) {
+		username := c.MustGet(gin.AuthUserKey).(string)
+		folder := c.Param("folder")
+		filepath := c.Param("filepath")
+		filename := folder + "/" + filepath
+		data, err := decrypt.GetDecryptedJson(cfg, users.GetUserByName(username), filename)
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, data)
+	})
+
 	r.GET("/healthz", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
-	r.Run(":8080")
+	err = r.Run(":8080")
+	utils.CheckErr(err)
 }

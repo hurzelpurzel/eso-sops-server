@@ -2,5 +2,14 @@ repos:
    - name: sopstest
      url: https://github.com/hurzelpurzel/sopstest.git
      branch: "main"
+     profile: default
+buckets:
+  - name: sopstest
+    url: s3://my-secrets-bucket
+    region: us-east-1
+    profile: default
+others:
+  - name: name     
+      
 checkout_dir: /workdir
 

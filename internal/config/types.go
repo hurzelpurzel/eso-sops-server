@@ -5,19 +5,40 @@ import "github.com/gin-gonic/gin"
 type Config struct {
 	CheckoutDir    string `yaml:"checkout_dir"`
 	Repos	[] Repo  `yaml:"repos"`
+	Buckets	[] Bucket  `yaml:"buckets"`
+	Others	[] Other  `yaml:"others"`
 }
 
 type Repo struct{
 	URL    string `yaml:"url"`
 	Branch string `yaml:"branch"`
 	Name  string `yaml:"name"`
-
+	Profile string `yaml:"profile"`
 }
 
-type Secret struct {
+type Other struct{
+	Name  string `yaml:"name"`
+}
+
+
+type Bucket struct{
+	URL    string `yaml:"url"`
+	Region string `yaml:"region"`
+	Name  string `yaml:"name"`
+	Profile string `yaml:"profile"`
+}
+
+type GitCredentials struct {
+	Profiles	[] GitSecret  `yaml:"profiles"`
+}
+
+
+type GitSecret struct {
+	Name    string `yaml:"name"`
 	GitUser  string `yaml:"git_user"`
 	GitToken string `yaml:"git_token"`
 }
+
 
 type Users struct {
 	Users []User `yaml:"users"`
@@ -39,6 +60,7 @@ func (u *Users) GetUserByName(name string) *User {
 	return nil
 }
 
+
 func (cfg *Config ) GetRepoByName(name string) *Repo {
 	for _, rep := range cfg.Repos {
 		if rep.Name == name {
@@ -47,6 +69,8 @@ func (cfg *Config ) GetRepoByName(name string) *Repo {
 	}
 	return nil
 }
+
+
 
 func (u *Users) ToAccounts() *gin.Accounts {
 	accounts := make(gin.Accounts)
@@ -63,4 +87,13 @@ func (u User) HasRole(role string) bool {
 		}
 	}
 	return false
+}
+
+func (cfg *GitCredentials ) GetSecretByName(name string) *GitSecret {
+	for _, sec := range cfg.Profiles {
+		if sec.Name == name {
+			return &sec
+		}
+	}
+	return nil
 }
