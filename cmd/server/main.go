@@ -8,35 +8,40 @@ import (
 	"github.com/hurzelpurzel/eso-sops-server/internal/utils"
 )
 
-
-
-
-
 func main() {
-	cfg,err := config.LoadConfig()
+	cfg, err := config.LoadConfig()
 	utils.CheckErr(err)
-	
-	users,er := config.LoadUsers()
+
+	users, er := config.LoadUsers()
 	utils.CheckErr(er)
 
-	gitback, err := backend.CreateGit(cfg)
-	utils.CheckErr(err)
-	err = gitback.DownloadAll()
-	utils.CheckErr(err)
+	var gitback backend.Backend
+	var s3back backend.Backend
 
-	s3back, err := backend.CreateS3(cfg)
-	utils.CheckErr(err)
-	err = s3back.DownloadAll()
-	utils.CheckErr(err)
-
-	otherback, err := backend.CreateOthers(cfg)
-	utils.CheckErr(err)
-	err = otherback.DownloadAll()
-	utils.CheckErr(err)
-
+	// Download all repositories and buckets at startup
+	if len(cfg.Repos) > 0 {
+		gitback, err := backend.CreateGit(cfg)
+		utils.CheckErr(err)
+		err = gitback.DownloadAll()
+		utils.CheckErr(err)
+	}
 	
+	if len(cfg.Buckets) > 0 {
+		s3back, err := backend.CreateS3(cfg)
+		utils.CheckErr(err)
+		err = s3back.DownloadAll()
+		utils.CheckErr(err)
+	}
+	if len(cfg.Others) > 0 {
+
+		otherback, err := backend.CreateOthers(cfg)
+		utils.CheckErr(err)
+		err = otherback.DownloadAll()
+		utils.CheckErr(err)
+	}
+
 	// Set up Gin router
-	r:= gin.Default()
+	r := gin.Default()
 
 	// Define authorized users
 	authorized := r.Group("/", gin.BasicAuth(*users.ToAccounts()))
@@ -53,7 +58,7 @@ func main() {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return
 		}
-		err = gitback.DownloadAll()	
+		err = gitback.DownloadAll()
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return
