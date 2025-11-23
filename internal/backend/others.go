@@ -12,10 +12,10 @@ type OthersBackend struct {
 	Others     []config.Other
 }
 
-func CreateOthers (cfg *config.Config) (*OthersBackend, error){
+func CreateOthers (cfg *config.Config) (OthersBackend, error){
 	ot := OthersBackend{}
 	err := ot.Init(cfg)
-	return &ot,err
+	return ot,err
 }
 
 func (g *OthersBackend) Init(cfg *config.Config) error {
@@ -25,7 +25,7 @@ func (g *OthersBackend) Init(cfg *config.Config) error {
 	return nil
 }
 
-func (g *OthersBackend) DownloadAll() error{
+func (g OthersBackend) DownloadAll() error{
 	for _, oth := range g.Others {
 		if err := g.DownloadByName(oth.Name); err != nil {
 			return err
@@ -34,8 +34,8 @@ func (g *OthersBackend) DownloadAll() error{
  	return nil
 }
 
-func (g *OthersBackend) DownloadByName(name string) error{
-	otherdir := g.getPath() + "/" + name
+func (g OthersBackend) DownloadByName(name string) error{
+	otherdir := g.GetPath() + "/" + name
 	if !dirExists(otherdir) {
 		return os.MkdirAll(otherdir, 0755)	
 	}
@@ -50,6 +50,6 @@ func dirExists(path string) bool {
     return err == nil && info.IsDir()
 }
 
-func (g *OthersBackend) getPath() string {
+func (g OthersBackend) GetPath() string {
 	return g.BasePath +"/"+g.Type
 }

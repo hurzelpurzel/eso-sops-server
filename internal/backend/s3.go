@@ -19,10 +19,10 @@ type S3Backend struct {
 	Buckets  []cf.Bucket
 }
 
-func CreateS3(cfg *cf.Config) (*S3Backend, error) {
+func CreateS3(cfg *cf.Config) (S3Backend, error) {
 	git := S3Backend{}
 	err := git.Init(cfg)
-	return &git, err
+	return git, err
 }
 
 func (g *S3Backend) Init(cfg *cf.Config) error {
@@ -57,7 +57,7 @@ func (s *S3Backend) DownloadByName(name string) error {
 		return fmt.Errorf("failed to list objects: %w", err)
 	}
 
-    bucketdir := s.getPath() + "/" + name
+    bucketdir := s.GetPath() + "/" + name
 	_ = os.RemoveAll(bucketdir) // clean up
 	_ = os.MkdirAll(bucketdir, 0755)
 
@@ -91,7 +91,8 @@ func getClient(profile string) (*s3.Client, error) {
 	return client, nil
 }
 
-func (g *S3Backend) getPath() string {
+
+func (g S3Backend) GetPath() string {
 	return g.BasePath +"/"+g.Type
 }
 

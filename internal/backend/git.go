@@ -18,10 +18,10 @@ type GitBackend struct {
 	Repos     []config.Repo
 }
 
-func CreateGit (cfg *config.Config) (*GitBackend, error){
+func CreateGit (cfg *config.Config) (GitBackend, error){
 	git := GitBackend{}
 	err := git.Init(cfg)
-	return &git,err
+	return git,err
 }
 
 func (g *GitBackend) Init(cfg *config.Config) error {
@@ -33,11 +33,11 @@ func (g *GitBackend) Init(cfg *config.Config) error {
 	return err
 }
 
-func (g *GitBackend) getPath() string {
+func (g GitBackend) GetPath() string {
 	return g.BasePath +"/"+g.Type
 }
 
-func (g *GitBackend) DownloadAll() error {
+func (g GitBackend) DownloadAll() error {
 	for _, rep := range g.Repos {
 		if err := g.DownloadByName(rep.Name); err != nil {
 			return err
@@ -46,7 +46,7 @@ func (g *GitBackend) DownloadAll() error {
 	return nil
 }
 
-func (g *GitBackend) GetRepoByName(name string) *config.Repo {
+func (g GitBackend) GetRepoByName(name string) *config.Repo {
 	for _, rep := range g.Repos {
 		if rep.Name == name {
 			return &rep
@@ -55,8 +55,8 @@ func (g *GitBackend) GetRepoByName(name string) *config.Repo {
 	return nil
 }
 
-func (g *GitBackend) DownloadByName(name string) error {
-	repodir := g.getPath() + "/" + name
+func (g GitBackend) DownloadByName(name string) error {
+	repodir := g.GetPath() + "/" + name
 	_ = os.RemoveAll(repodir) // clean up
 	_ = os.MkdirAll(repodir, 0755)
 	repcfg := g.GetRepoByName(name)

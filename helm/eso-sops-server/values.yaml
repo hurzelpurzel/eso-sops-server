@@ -100,6 +100,12 @@ volumes:
   - name: git
     secret:
       secretName: git   
+      optional: true
+  - name: awsconfig
+    secret:
+      secretName: awsconfig
+      optional: true   
+
 
 # Additional volumeMounts on the output Deployment definition.
 volumeMounts: 
@@ -114,6 +120,10 @@ volumeMounts:
   - name: git
     mountPath: /config/git.yaml
     subPath: git.yaml
+    optional: true  
+  - name: awsconfig
+    mountPath: /awsconfig
+    optional: true
 
 nodeSelector: {}
 
@@ -121,5 +131,15 @@ tolerations: []
 
 affinity: {}
 
-config:
-  
+
+env:
+  - name: "GIT_CREDS_FILE"
+    value: "/config/git.yaml"
+  - name:  "USERS_FILE"
+    value: "/config/users.yaml"
+  - name:  "CONFIG_FILE"
+    value:  "/config/config.yaml"  
+  - name:  "AWS_CONFIG_FILE"
+    value: "/awsconfig/config"
+  - name: "AWS_SHARED_CREDENTIALS_FILE"
+    value: "/awsconfig/credentials"

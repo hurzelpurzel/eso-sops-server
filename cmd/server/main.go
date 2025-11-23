@@ -8,6 +8,10 @@ import (
 	"github.com/hurzelpurzel/eso-sops-server/internal/utils"
 )
 
+var git backend.GitBackend
+var s3 backend.S3Backend
+var other backend.OthersBackend
+
 func main() {
 	cfg, err := config.LoadConfig()
 	utils.CheckErr(err)
@@ -15,8 +19,7 @@ func main() {
 	users, er := config.LoadUsers()
 	utils.CheckErr(er)
 
-	var gitback backend.Backend
-	var s3back backend.Backend
+	
 
 	// Download all repositories and buckets at startup
 	if len(cfg.Repos) > 0 {
@@ -24,6 +27,7 @@ func main() {
 		utils.CheckErr(err)
 		err = gitback.DownloadAll()
 		utils.CheckErr(err)
+		git = gitback
 	}
 	
 	if len(cfg.Buckets) > 0 {
@@ -31,13 +35,14 @@ func main() {
 		utils.CheckErr(err)
 		err = s3back.DownloadAll()
 		utils.CheckErr(err)
+		s3 = s3back
 	}
 	if len(cfg.Others) > 0 {
-
 		otherback, err := backend.CreateOthers(cfg)
 		utils.CheckErr(err)
 		err = otherback.DownloadAll()
 		utils.CheckErr(err)
+		other = otherback
 	}
 
 	// Set up Gin router
@@ -47,18 +52,19 @@ func main() {
 	authorized := r.Group("/", gin.BasicAuth(*users.ToAccounts()))
 
 	authorized.GET("/init", func(c *gin.Context) {
+		
 		username := c.MustGet(gin.AuthUserKey).(string)
 		user := users.GetUserByName(username)
 		if !user.HasRole("admin") {
 			c.JSON(403, gin.H{"error": "forbidden"})
 			return
 		}
-		err := s3back.DownloadAll()
+		err := s3.DownloadAll()
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return
 		}
-		err = gitback.DownloadAll()
+		err = git.DownloadAll()
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return
@@ -71,7 +77,7 @@ func main() {
 		repo := c.Param("repo")
 		filepath := c.Param("filepath")
 		filename := repo + "/" + filepath
-		data, err := decrypt.GetDecryptedJson(cfg, users.GetUserByName(username), filename)
+		data, err := decrypt.GetDecryptedJson(git, users.GetUserByName(username), filename)
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return
@@ -84,7 +90,7 @@ func main() {
 		bucket := c.Param("bucket")
 		filepath := c.Param("filepath")
 		filename := bucket + "/" + filepath
-		data, err := decrypt.GetDecryptedJson(cfg, users.GetUserByName(username), filename)
+		data, err := decrypt.GetDecryptedJson(s3, users.GetUserByName(username), filename)
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return
@@ -97,7 +103,7 @@ func main() {
 		folder := c.Param("folder")
 		filepath := c.Param("filepath")
 		filename := folder + "/" + filepath
-		data, err := decrypt.GetDecryptedJson(cfg, users.GetUserByName(username), filename)
+		data, err := decrypt.GetDecryptedJson(other, users.GetUserByName(username), filename)
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return

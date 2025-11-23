@@ -13,10 +13,12 @@
             "mode": "auto",
             "program": "${fileDirname}",
             "env": {
-                "GIT_CREDS_FILE": "/home/ludger/testdir/config/git.yaml",
+                 "GIT_CREDS_FILE": "/home/ludger/testdir/config/git.yaml",
                  "USERS_FILE": "/home/ludger/testdir/config/users.yaml",
-                 "CONFIG_FILE": "/home/ludger/testdir/config/config.yaml"
-            }
+                 "CONFIG_FILE": "/home/ludger/testdir/config/config.yaml",
+                 "AWS_CONFIG_FILE": "/home/ludger/testdir/config/config",
+                 "AWS_SHARED_CREDENTIALS_FILE": "/home/ludger/testdir/config/credentials"
+                }
            
         }    ]
 }
