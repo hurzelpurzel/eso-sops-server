@@ -1,0 +1,7 @@
+[default]
+region = us-east-1
+output = json
+
+[profile myprofile]
+region = eu-central-1
+output = text

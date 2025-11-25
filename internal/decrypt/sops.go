@@ -1,52 +1,55 @@
 package decrypt
 
 import (
-    "bytes"
-    "fmt"
-    
-    "os"
-    "os/exec"
-    
-    "path/filepath"
-    "strings"
+	"bytes"
+	"fmt"
 
-   
-    "github.com/hurzelpurzel/eso-sops-server/internal/config"
+	"os"
+	"os/exec"
+
+	"path/filepath"
+	"strings"
+
+	"github.com/hurzelpurzel/eso-sops-server/internal/backend"
+	"github.com/hurzelpurzel/eso-sops-server/internal/config"
 )
 
 /* Expects sops binary in container*/
 func decryptSOPS(filePath string, agekey string) (string, error) {
-    os.Setenv("SOPS_AGE_KEY", agekey)
-    cmd := exec.Command( "sops", "-d", filePath)
-    
-    var out bytes.Buffer
-    cmd.Stdout = &out
-    cmd.Stderr = os.Stderr
-    err := cmd.Run()
-    if err != nil {
-        return "", err
-    }
-    os.Setenv("SOPS_AGE_KEY", "" )
-    return out.String(), nil
+	err := os.Setenv("SOPS_AGE_KEY", agekey)
+	if err != nil {
+		return "", err
+	}
+
+	cmd := exec.Command("sops", "-d", filePath)
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = os.Stderr
+	err = cmd.Run()
+	if err != nil {
+		return "", err
+	}
+	_ = os.Setenv("SOPS_AGE_KEY", "")
+
+	return out.String(), nil
 }
 
-func GetDecryptedJson(config *config.Config, user *config.User, filename string) ( * string, error) {
-   
-    fullPath := filepath.Join(config.CheckoutDir, filename)
+func GetDecryptedJson(backend backend.Backend, user *config.User, filename string) (*string, error) {
 
-    if !strings.HasSuffix(fullPath, ".json") {
-        return nil, fmt.Errorf("file %s is not a JSON file", fullPath)
-    }
+	fullPath := filepath.Join(backend.GetPath(), filename)
 
-    content, err := decryptSOPS(fullPath, user.AgeKey)
-    if err != nil {
-        return nil, fmt.Errorf("error decrypting %s: %w", fullPath, err)
-    }
+	if !strings.HasSuffix(fullPath, ".json") {
+		return nil, fmt.Errorf("file %s is not a JSON file", fullPath)
+	}
 
-    
-    return &content, nil
+	content, err := decryptSOPS(fullPath, user.AgeKey)
+	if err != nil {
+		return nil, fmt.Errorf("error decrypting %s: %w", fullPath, err)
+	}
+
+	return &content, nil
 }
-
 
 /*
 func GetDecryptedJson(config *config.Config , user *config.User, filename string) (map[string]string, error) {

@@ -2,24 +2,23 @@ package config
 
 import (
 	"os"
-   
+
+	"github.com/hurzelpurzel/eso-sops-server/internal/utils"
 	"gopkg.in/yaml.v2"
 )
 
+const EnvGitCredFile = "GIT_CREDS_FILE"
+const EnvGitUsersYaml = "USERS_FILE"
+const EnvConfigYaml = "CONFIG_FILE"
 
 
 
 
-
-func GetConfigPath() string {
-    if value, exists := os.LookupEnv("CONFIG_PATH"); exists {
-        return value
-    }
-    return "/home/ludger/testdir/config"
-}
-
-func LoadConfig(file string) (* Config, error) {
-    path := GetConfigPath() + "/" + file
+func LoadConfig() (* Config, error) {
+    path, err := utils.GetEnvOrFail(EnvConfigYaml) 
+	if err != nil {
+		return nil, err
+	}
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -29,19 +28,13 @@ func LoadConfig(file string) (* Config, error) {
 	return &cfg, err
 }
 
-func LoadSecret(file string) (*Secret, error) {
-    path := GetConfigPath() + "/" + file
-	data, err := os.ReadFile(path)
+
+
+func LoadUsers() (*Users, error) {
+    path, err := utils.GetEnvOrFail(EnvGitUsersYaml) 
 	if err != nil {
 		return nil, err
 	}
-	var sec Secret
-	err = yaml.Unmarshal(data, &sec)
-	return &sec, err
-}
-
-func LoadUsers(file string) (*Users, error) {
-    path := GetConfigPath() + "/" + file
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -49,5 +42,21 @@ func LoadUsers(file string) (*Users, error) {
 	var users Users
 	err = yaml.Unmarshal(data, &users)
 	return &users, err
+}
+
+/*-----------------------------------*/
+
+func LoadGitConfig() (*GitCredentials, error) {
+    path, err := utils.GetEnvOrFail(EnvGitCredFile) 
+	if err != nil {
+		return nil, err
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var sec GitCredentials
+	err = yaml.Unmarshal(data, &sec)
+	return &sec, err
 }
 
