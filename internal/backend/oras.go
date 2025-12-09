@@ -72,7 +72,12 @@ func (g OrasBackend) DownloadByName(name string) error {
 	if err != nil {
 		return fmt.Errorf("failed to create local folder: %w", err)
 	}
-	defer fs.Close()
+	
+	defer func() {
+        if cerr := fs.Close(); cerr != nil {
+            fmt.Printf("failed to close file: %v\n", cerr)
+        }
+    }()
 
 	// Remote-Repository erstellen
 	repo, err := remote.NewRepository(artifactRef)
