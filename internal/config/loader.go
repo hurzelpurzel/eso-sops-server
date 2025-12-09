@@ -10,7 +10,7 @@ import (
 const EnvGitCredFile = "GIT_CREDS_FILE"
 const EnvGitUsersYaml = "USERS_FILE"
 const EnvConfigYaml = "CONFIG_FILE"
-
+const EnvOrasTokenFile = "ORAS_TOKEN_FILE"
 
 
 
@@ -28,7 +28,17 @@ func LoadConfig() (* Config, error) {
 	return &cfg, err
 }
 
-
+func LoadOrasToken() (string, error) {
+	path, err := utils.GetEnvOrFail(EnvOrasTokenFile)	
+    if err != nil {
+		return "", err
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
 
 func LoadUsers() (*Users, error) {
     path, err := utils.GetEnvOrFail(EnvGitUsersYaml) 
