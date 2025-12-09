@@ -11,6 +11,7 @@ import (
 var git backend.GitBackend
 var s3 backend.S3Backend
 var other backend.OthersBackend
+var oras backend.OrasBackend
 
 func main() {
 	cfg, err := config.LoadConfig()
@@ -37,6 +38,15 @@ func main() {
 		utils.CheckErr(err)
 		s3 = s3back
 	}
+
+	if len(cfg.OciRegistrys) > 0 {
+		orasback, err := backend.CreateOras(cfg)
+		utils.CheckErr(err)
+		err = orasback.DownloadAll()
+		utils.CheckErr(err)
+		oras = orasback
+	}
+
 	if len(cfg.Others) > 0 {
 		otherback, err := backend.CreateOthers(cfg)
 		utils.CheckErr(err)
@@ -91,6 +101,20 @@ func main() {
 		filepath := c.Param("filepath")
 		filename := bucket + "/" + filepath
 		data, err := decrypt.GetDecryptedJson(s3, users.GetUserByName(username), filename)
+		if err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, data)
+	})
+
+    authorized.GET("/oras/:reg/:image/:filepath", func(c *gin.Context) {
+		username := c.MustGet(gin.AuthUserKey).(string)
+		reg := c.Param("reg")
+		image := c.Param("image")
+		filepath := c.Param("filepath")
+		filename := reg + "/" + image + "/" + filepath
+		data, err := decrypt.GetDecryptedJson(oras, users.GetUserByName(username), filename)
 		if err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 			return

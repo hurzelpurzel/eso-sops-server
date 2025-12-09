@@ -17,7 +17,8 @@
                  "USERS_FILE": "/home/ludger/testdir/config/users.yaml",
                  "CONFIG_FILE": "/home/ludger/testdir/config/config.yaml",
                  "AWS_CONFIG_FILE": "/home/ludger/testdir/config/config",
-                 "AWS_SHARED_CREDENTIALS_FILE": "/home/ludger/testdir/config/credentials"
+                 "AWS_SHARED_CREDENTIALS_FILE": "/home/ludger/testdir/config/credentials",
+                 "ORAS_TOKEN_FILE": "/home/ludger/testdir/config/token.txt"
                 }
            
         }    ]

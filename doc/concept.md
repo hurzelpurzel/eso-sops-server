@@ -71,6 +71,9 @@ http://hostname:8080/git/reponame/filename.json
 or s3 
 http://hostname:8080/s3/bucketname/filename.json
 
+or OCI  
+http://hostname:8080/oras/oct_regname/imagename/filename.json
+
 or plainfile in pvc
 http://hostname:8080/other/foldername/filename.json
 
@@ -81,6 +84,7 @@ http://hostname:8080/other/foldername/filename.json
 * Let ESO Authenticate via User ( Integration Test )
 * S3 Backend
 * Support other Storage Backend (  provided PVC )
+* OCI Backend Support 
 
 ## TODOS / Roadmap
 * Test new Backend Features

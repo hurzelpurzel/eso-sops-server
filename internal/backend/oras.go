@@ -64,7 +64,7 @@ func (g OrasBackend) DownloadByName(name string) error {
 
 	// Beispiel: Referenz auf ein Artefakt in einer Registry
 	// Format: <REGISTRY>/<PROJECT>/<REPO>/<NAME>:<TAG>
-	artifactRef := repcfg.Hostname+repcfg.Repository+"/"+repcfg.Image+":"+repcfg.Tag
+	artifactRef := repcfg.Hostname+"/"+repcfg.Repository+"/"+repcfg.Image+":"+repcfg.Tag
 
 	
 	// Lokales File-Store Backend
