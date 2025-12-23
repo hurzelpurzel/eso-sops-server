@@ -8,6 +8,12 @@ buckets:
     url: s3://my-secrets-bucket
     region: us-east-1
     profile: default
+oci_registries:
+  - name: my-oci-repo
+    hostname: myregistry.example.com
+    repository: myproject/myrepo
+    image: myimage
+    tag: latest    
 others:
   - name: name     
       
